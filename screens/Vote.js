@@ -127,8 +127,6 @@ export default class Votes extends React.Component {
             <CardItem>
               <Body style={{ flext: 1, flexDirection: 'row', justifyContent:'space-evenly' }}>
                 <Image style={{ height: 150, width: '100%' }} source={require('../img/plot.png')} />
-                   <Button onPress={() => this._onYes(this.props.navigation.state.params.id)} full success style={{ width: '40%'}}><Text>YES</Text></Button>
-                   <Button onPress={() => this._onNo(this.props.navigation.state.params.id)} full danger style={{ width: '40%'}}><Text>NO</Text></Button>
               </Body>
             </CardItem>
           </Card>
