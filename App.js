@@ -34,9 +34,9 @@ const instructions = Platform.select({
 // }
 
 const App = createStackNavigator({
-  Votes: { screen: Votes },
-  Home: { screen: Home },
   Vote: { screen: Vote },
+  Home: { screen: Home },
+  Votes: { screen: Votes },
 },
 { headerMode: 'screen' });
 

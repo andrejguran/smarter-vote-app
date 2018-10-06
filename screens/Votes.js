@@ -41,13 +41,13 @@ export default class Votes extends React.Component {
 </View>
 <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-evenly', marginTop: 20}}>
           
-          <TouchableHighlight onPress={() => navigate('Vote', { id: 1 })}>
+          <TouchableHighlight onPress={() => navigate('Vote', { id: 3 })}>
           <ImageBackground  source={require('../img/law6.png')}style={{width: 170, height: 250}}>
           <Text style={styles.text}>H.R.6: SUPPORT for Patients and Communities Act</Text>
           </ImageBackground>
           </TouchableHighlight>
 
-          <TouchableHighlight onPress={() => navigate('Vote', { id: 1 })}>
+          <TouchableHighlight onPress={() => navigate('Vote', { id: 4 })}>
           <ImageBackground  source={require('../img/law4.png')}style={{width: 170, height: 250}}>
           <Text style={styles.text}>H.R.6147 - Making appropriations for the Department</Text>
           </ImageBackground>
@@ -56,13 +56,13 @@ export default class Votes extends React.Component {
 </View>
 <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-evenly', marginTop: 20}}>
           
-          <TouchableHighlight onPress={() => navigate('Vote', { id: 1 })}>
+          <TouchableHighlight onPress={() => navigate('Vote', { id: 5 })}>
           <ImageBackground  source={require('../img/law2.png')}style={{width: 170, height: 250}}>
           <Text style={styles.text}>H.R.303: FAA Reauthorization Act of 2018</Text>
           </ImageBackground>
           </TouchableHighlight>
 
-          <TouchableHighlight onPress={() => navigate('Vote', { id: 1 })}>
+          <TouchableHighlight onPress={() => navigate('Vote', { id: 6 })}>
           <ImageBackground  source={require('../img/law3.png')}style={{width: 170, height: 250}}>
           <Text style={styles.text}>H.R.304: FAA Reauthorization Act of 2018</Text>
           </ImageBackground>
