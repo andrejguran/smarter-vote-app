@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, View, ScrollView, Image} from 'react-native';
+import {Platform, StyleSheet, View, ScrollView, Image, AsyncStorage, Alert} from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right, Spinner } from 'native-base';
+import PopupDialog, {DialogButton} from 'react-native-popup-dialog';
 
 
 const styles = {
@@ -28,7 +29,7 @@ export default class Votes extends React.Component {
         trasnactionId: null,
       };
     }
-    _onYes = function(id) {
+    _onYes = function(id, handler) {
         var formData = new FormData();
         formData.append('vote_id', 'vote-'+id);
         formData.append('voter_id', '7');
@@ -39,12 +40,22 @@ export default class Votes extends React.Component {
         }).then((response) => response.json())
       .then((responseJson) => {
         this.setState({spinner: false, trasnactionId:responseJson.result });
+        AsyncStorage.getItem('@MySuperStore:points').then(function (item) {
+                    if (!item) {
+                        item = 0;
+                    }
+                    item = parseInt(item) + 5;
+                     AsyncStorage.setItem('@MySuperStore:points', ""+item).then(function () {
+                        handler()
+                    })
+                })
       })
       .catch((error) => {
         console.error(error);
       });
+      this.popupDialog.show();
     }
-    _onNo = function(id) {
+    _onNo = function(id, handler) {
         var formData = new FormData();
         formData.append('vote_id', 'vote-'+id);
         formData.append('voter_id', '7');
@@ -55,16 +66,40 @@ export default class Votes extends React.Component {
         }).then((response) => response.json())
                 .then((responseJson) => {
                   this.setState({spinner: false, trasnactionId:responseJson.result });
+                  AsyncStorage.getItem('@MySuperStore:points').then(function (item) {
+                              if (!item) {
+                                  item = 0;
+                              }
+                              item = parseInt(item) + 5;
+                               AsyncStorage.setItem('@MySuperStore:points', ""+item).then(function () {
+                                  handler()
+                              })
+                          })
                 })
                 .catch((error) => {
                   console.error(error);
                 });
+                this.popupDialog.show();
     }
 
     render() {
       const { navigate } = this.props.navigation;
       //this.props.navigation.state.params.id
       return (
+      <View>
+      <PopupDialog height={270} ref={(popupDialog) => { this.popupDialog = popupDialog; }}
+      actions={[
+                  <DialogButton
+                    text="Close"
+                    onPress={() => {
+                      this.popupDialog.dismiss();
+                    }}
+                    key="button-1"
+                  />,
+                ]}
+      >
+                                      <Image style={{height: 194, width: "100%", resizeMode:'contain' }} source={require('../img/exp_points_2.png')} />
+                         </PopupDialog>
         <ScrollView>
           <Image style={{ height: 150, width: '100%' }} source={require('../img/detail1.png')} />
           <Text style={ styles.text }>SUPPORT for Patients and Communities Act</Text>
@@ -72,7 +107,6 @@ export default class Votes extends React.Component {
             <CardItem>
               <Left>
                 <Body>
-                  <Text>H.R. 302</Text>
                   <Text note>A bill to provide protections for certain sports medicine professionals who provide certain medical services in a secondary State.</Text>
                   <Button style={{alignSelf: 'flex-end'}} small transparent><Text>learn more</Text></Button>
                 </Body>
@@ -103,24 +137,14 @@ export default class Votes extends React.Component {
           <Card>
             <CardItem>
               <Body style={{ flext: 1, flexDirection: 'row', justifyContent:'space-evenly' }}>
-                   <Button onPress={() => { let self = this; this.setState({voted: true, spinner: true}); this._onYes(this.props.navigation.state.params.id); setTimeout(function(){ self.setState({spinner: false}) }, 3000); }} full success style={{ width: '40%'}}><Text>YES</Text></Button>
-                   <Button onPress={() => { let self = this; this.setState({voted: true, spinner: true}); this._onNo(this.props.navigation.state.params.id); setTimeout(function(){ self.setState({spinner: false}) }, 3000); }}  full danger style={{ width: '40%'}}><Text>NO</Text></Button>
+                   <Button onPress={() => { let self = this; this.setState({voted: true, spinner: true}); this._onYes(this.props.navigation.state.params.id, this.props.navigation.state.params.handler); setTimeout(function(){ self.setState({spinner: false}) }, 3000); }} full success style={{ width: '40%'}}><Text>YES</Text></Button>
+                   <Button onPress={() => { let self = this; this.setState({voted: true, spinner: true}); this._onNo(this.props.navigation.state.params.id, this.props.navigation.state.params.handler); setTimeout(function(){ self.setState({spinner: false}) }, 3000); }}  full danger style={{ width: '40%'}}><Text>NO</Text></Button>
               </Body>
             </CardItem>
           </Card>
           : null}
 
           {this.state.spinner ? <Spinner /> : null}
-
-          {this.state.trasnactionId ?
-          <Card>
-            <CardItem>
-              <Body style={{ flext: 1, flexDirection: 'row', justifyContent:'space-evenly' }}>
-                <Text>Blockchain transaction id: {this.state.trasnactionId}</Text>
-              </Body>
-            </CardItem>
-          </Card>
-          : null}
 
           {this.state.voted && !this.state.spinner ?
           <Card>
@@ -131,7 +155,20 @@ export default class Votes extends React.Component {
             </CardItem>
           </Card>
           : null}
+
+          {this.state.trasnactionId ?
+            <Card>
+              <CardItem>
+                <Body style={{ flext: 1, flexDirection: 'row', justifyContent:'space-evenly' }}>
+                  <Text>Blockchain transaction id: {this.state.trasnactionId}</Text>
+                </Body>
+              </CardItem>
+            </Card>
+            : null}
+
+
         </ScrollView>
+</View>
       );
     }
   }
